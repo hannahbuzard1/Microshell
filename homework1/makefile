@@ -21,6 +21,15 @@ Hello: Hello.o
 Runtime.o: Runtime.s
 	asm Runtime.s
 
+aFunProgram.s: aFunProgram.h aFunProgram.k System.h 
+	      kpl aFunProgram
+
+aFunProgram.o: aFunProgram.s 
+	      asm aFunProgram.s
+
+aFunProgram: Runtime.o System.o aFunProgram.o
+	 lddd Runtime.o System.o aFunProgram.o -o aFunProgram
+
 System.s: System.h System.k
 	kpl System -unsafe
 
@@ -40,3 +49,4 @@ clean:
 	rm -f Echo.o Echo
 	rm -f Hello.o Hello
 	rm -f Runtime.o System.s System.o HelloWorld.o HelloWorld.s HelloWorld
+		
