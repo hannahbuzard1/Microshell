@@ -1,0 +1,63 @@
+Script started on 2020-10-06 21:46:10-0700
+buzardh@linux-12:~/csci447_f20/homework1$ ake [K[K[K[Kmake clean
+rm -f Echo.o Echo
+rm -f Hello.o Hello
+rm -f Runtime.o System.s System.o HelloWorld.o HelloWorld.s HelloWorld
+buzardh@linux-12:~/csci447_f20/homework1$ make aFunProgram
+asm Runtime.s
+kpl System -unsafe
+asm System.s
+lddd Runtime.o System.o aFunProgram.o -o aFunProgram
+buzardh@linux-12:~/csci447_f20/homework1$ blitz -g aFunProgram
+Beginning execution...
+====================  KPL PROGRAM STARTING  ====================
+hello
+hello
+hannah
+hannah
+this is my script
+this is my script
+yay
+yay
+q
+
+****  A 'debug' instruction was encountered  *****
+Done!  The next instruction to execute will be:
+0027CC: A1000028       jmp     0x000028		! targetAddr = _Label_10
+
+Entering machine-level debugger...
+======================================================
+=====                                            =====
+=====         The BLITZ Machine Emulator         =====
+=====                                            =====
+=====  Copyright 2001-2007, Harry H. Porter III  =====
+=====                                            =====
+======================================================
+
+Enter a command at the prompt.  Type 'quit' to exit or 'help' for
+info about commands.
+> g
+Beginning execution...
+
+hello
+hello
+me again
+me again
+q
+
+****  A 'debug' instruction was encountered  *****
+Done!  The next instruction to execute will be:
+0027CC: A1000028       jmp     0x000028		! targetAddr = _Label_10
+> exit
+Unrecognized command.
+Enter a command at the prompt.  Type 'quit' to exit or 'help' for info about commands.
+> quit
+Number of Disk Reads    = 0
+Number of Disk Writes   = 0
+Instructions Executed   = 226965976
+Time Spent Sleeping     = 0
+    Total Elapsed Time  = 226965976
+buzardh@linux-12:~/csci447_f20/homework1$ exit
+exit
+
+Script done on 2020-10-06 21:47:14-0700
