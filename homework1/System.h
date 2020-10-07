@@ -25,7 +25,7 @@ header System
 
   -- The following routines are implemented in assembly in the Runtime.s file.
   functions
-    external GetCh() -- gets and returns character (used for aFunProgram.k)
+    external GetCh() returns char
     external RuntimeExit ()           -- Terminate all execution and do not return
     external getCatchStack () returns int  -- Actually returns ptr to a CATCH_RECORD
     external MemoryZero (p: ptr to void, byteCount: int)  -- Set block of mem to zeros

@@ -1,15 +1,13 @@
 code aFunProgram
-    var input: int
-    var convertedChar: char
-
+    var letters: char
     function main ()
-        while 1
-            input = getCh()
-            if chartoInt('q') == input
-                debug
-            else
-                convertedChar = intToChar(input)
-                printChar(convertedChar)
+        while 1 > 0
+           letters=GetCh()
+           if letters == 'q'
+               debug
+           else
+               printChar(letters)
+           endIf
         endWhile
     endFunction
-endCode 
+endCode
