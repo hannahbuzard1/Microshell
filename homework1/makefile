@@ -49,4 +49,4 @@ clean:
 	rm -f Echo.o Echo
 	rm -f Hello.o Hello
 	rm -f Runtime.o System.s System.o HelloWorld.o HelloWorld.s HelloWorld
-		
+	rm -f  Runtime.o System.o aFunProgram.o aFunProgram	
