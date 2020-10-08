@@ -27,7 +27,7 @@ aFunProgram.s: aFunProgram.h aFunProgram.k System.h
 aFunProgram.o: aFunProgram.s 
 	      asm aFunProgram.s
 
-aFunProgram: Runtime.o System.o aFunProgram.o
+aFunProgram: aFunProgram.o Runtime.o System.o
 	 lddd Runtime.o System.o aFunProgram.o -o aFunProgram
 
 System.s: System.h System.k
