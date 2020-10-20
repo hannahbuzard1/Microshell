@@ -23,8 +23,8 @@ code Main
       -----  Uncomment any one of the following to perform the desired test  -----
 
       -- SimpleThreadExample ()
-      MoreThreadExamples ()
-      -- TestMutex ()
+      --  MoreThreadExamples ()
+       TestMutex ()
       -- ProducerConsumer ()
       -- DiningPhilosophers ()
 

@@ -22,7 +22,6 @@ header Thread
     external ThreadStartUp ()
 
   var
-    currentlyHeld : int
     readyList: List [Thread]
     currentThread: ptr to Thread
     mainThread: Thread

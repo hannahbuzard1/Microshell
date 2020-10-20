@@ -101,17 +101,16 @@ code Synch
       ----------  Mutex . Lock  ----------
 
       method Lock ()
-	  var
-          oldIntStat: int
-          oldIntStat = SetInterruptsTo (DISABLED)
-          if currentlyHeld != currentThread 
-            currentlyHeld = currentThread
-	  else
-	    waitingThreads.AddToEnd (currentThread)
+	  var oldIntStat: int
+          if currentlyHeld != null --while thread cannot hold mutex, add to waiting queue and sleep
+            oldIntStat = SetInterruptsTo (DISABLED)
+            waitingThreads.AddToEnd(currentThread)
             currentThread.Sleep () 
+          else                                --no other threads are using the mutex
+              currentlyHeld = currentThread   --give mutex to current thread        
           endIf
-          oldIntStat = SetInterruptsTo (oldIntStat)
-        endMethod
+          oldIntStat = SetInterruptsTo (oldIntStat)        
+          endMethod
 
       ----------  Mutex . Unlock  ----------
 
@@ -119,14 +118,12 @@ code Synch
             var
             oldIntStat: int
             t: ptr to Thread
-          oldIntStat = SetInterruptsTo (DISABLED)
-          if t == currentlyHeld
-	    currentlyHeld = null
-            t = waitingThreads.Remove ()
+          oldIntStat = SetInterruptsTo (DISABLED)                        
+	  currentlyHeld = null         -- unlock mutex by having no threads holding the mutex
+          t = waitingThreads.Remove()
+          if t != null                 -- if there was a thread waiting then add it to ready list
             t.status = READY
-            readyList.AddToEnd (t)
-	  else
-	    FatalError ("This thread does not have the ability to unlock the mutex")	   
+            readyList.AddToEnd(t)
           endIf
           oldIntStat = SetInterruptsTo (oldIntStat)
         endMethod
