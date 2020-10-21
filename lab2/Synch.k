@@ -2,7 +2,7 @@ code Synch
 
   -- OS Class: Project 2
   --
-  -- <PUT YOUR NAME HERE>
+  -- Hannah Buzard
 
 -----------------------------  Semaphore  ---------------------------------
 
@@ -102,13 +102,16 @@ code Synch
 
       method Lock ()
 	  var oldIntStat: int
-          if currentlyHeld != null --while thread cannot hold mutex, add to waiting queue and sleep
-            oldIntStat = SetInterruptsTo (DISABLED)
+          if currentlyHeld == currentThread
+            FatalError("Attempt to lock a mutex by a thread already holding it")
+            endIf 
+          oldIntStat = SetInterruptsTo (DISABLED)
+          if currentlyHeld != null          --while thread cannot hold mutex, add to waiting queue and sleep
             waitingThreads.AddToEnd(currentThread)
             currentThread.Sleep () 
-          else                                --no other threads are using the mutex
-              currentlyHeld = currentThread   --give mutex to current thread        
-          endIf
+          else                              --no other threads are using the mutex
+            currentlyHeld = currentThread   --give mutex to current thread
+          endIf    
           oldIntStat = SetInterruptsTo (oldIntStat)        
           endMethod
 
@@ -118,10 +121,14 @@ code Synch
             var
             oldIntStat: int
             t: ptr to Thread
+          if currentlyHeld != currentThread
+            FatalError("Attempt to Unlock by a thread not holding the mutex")
+          endIf
           oldIntStat = SetInterruptsTo (DISABLED)                        
 	  currentlyHeld = null         -- unlock mutex by having no threads holding the mutex
           t = waitingThreads.Remove()
           if t != null                 -- if there was a thread waiting then add it to ready list
+            currentlyHeld = t          -- t now holding the mutex (thread that was previously waiting)
             t.status = READY
             readyList.AddToEnd(t)
           endIf
