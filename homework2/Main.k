@@ -397,7 +397,6 @@ code Main
        
         -- implementation follows ...
 
-        mLock.acquire()
         if itemCount == BUFFER_SIZE
           not_full.wait()
         endIf
@@ -427,7 +426,6 @@ code Main
             endFor
         -------------- Printing Done ------------------------------------
 
-        mLock.release()
         endMethod
 
     method removeItem ()
@@ -441,7 +439,7 @@ code Main
  
         
         -- implementation follows ...
-        mLock.aquire()
+
         if itemCount == 0
           not_empty.wait()
         endIf
@@ -469,8 +467,6 @@ code Main
             printChar (' ')
             endFor
         ---------------- Printing Done ------------------------------------
-
-        mLock.release()
      
 	 endMethod
   endBehavior
