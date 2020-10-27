@@ -2,7 +2,7 @@ code Main
 
   -- OS Class: Project 2
   --
-  -- <PUT YOUR NAME HERE>
+  -- Hannah Buzard
   --
   -- This package contains the following:
   --     SimpleThreadExample
@@ -395,8 +395,19 @@ code Main
         -- .. Lock, wait on condition then add. Signal if necessary and print before unlocking.
         -- var i and j have been declared and will be used for printing. 
        
-        -- ...unimplemented...
-	FatalError("addItem unimplemented!\n")
+        -- implementation follows ...
+
+        mLock.acquire()
+        if itemCount == BUFFER_SIZE
+          not_full.wait()
+        endIf
+        putItemIntoBuffer(item)
+        itemCount = itemCount + 1
+        if itemCount == 1
+          not_empty.signal()
+        endIf
+       
+        
 
 
         ------------Print the thread name, which tells what we are doing.----
@@ -416,7 +427,7 @@ code Main
             endFor
         -------------- Printing Done ------------------------------------
 
-        -- unlock code goes here
+        mLock.release()
         endMethod
 
     method removeItem ()
@@ -429,8 +440,17 @@ code Main
         -- .. Lock, wait on condition then remove. Signal if necessary and print before unlocking.
  
         
-        -- ...unimplemented...
-	FatalError("removeItem unimplemented!\n")
+        -- implementation follows ...
+        mLock.aquire()
+        if itemCount == 0
+          not_empty.wait()
+        endIf
+        item = removeItemFromBuffer()
+        itemCount = itemCount - 1
+        if itemCount == BUFFER_SIZE - 1
+          not_full.signal()
+        endIf
+	
 	
 
         -----------Print the thread name, which tells what we are doing.----
@@ -450,7 +470,7 @@ code Main
             endFor
         ---------------- Printing Done ------------------------------------
 
-        -- ..unlock code goes here
+        mLock.release()
      
 	 endMethod
   endBehavior
