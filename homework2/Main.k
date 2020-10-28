@@ -387,6 +387,7 @@ code Main
   behavior BufferMonitor
 
     method Init ()
+      buffer = new array of char {BUFFER_SIZE of '?'}
       bufferNextIn = 0
       bufferNextOut = 0
       bufferLength = 0     
@@ -395,6 +396,9 @@ code Main
       not_full = new Condition
       not_empty = new Condition
       mutexPtr = &myMutex
+      myMutex.Init()
+      not_full.Init()
+      not_empty.Init()
     endMethod
 
       method addItem (c: char)
