@@ -185,9 +185,9 @@ _Label_2:
 	.import	_CheckVersion_P_Thread_
 	cmp	r1,0
 	bne	_Label_3
-! Make sure _P_Synch_ has hash value 0xad7eed45 (decimal -1384190651)
+! Make sure _P_Synch_ has hash value 0x29c24f7f (decimal 700600191)
 	set	_packageName,r2
-	set	0xad7eed45,r3
+	set	0x29c24f7f,r3
 	call	_CheckVersion_P_Synch_
 	.import	_CheckVersion_P_Synch_
 	cmp	r1,0

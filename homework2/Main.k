@@ -375,6 +375,9 @@ code Main
       bufferLength: int
       not_full: Condition
       not_empty: Condition
+      myMutex: Mutex
+      itemCount : int 
+      mutexPtr : ptr to Mutex     
     methods
       Init ()
       addItem (c: char)
@@ -384,8 +387,12 @@ code Main
   behavior BufferMonitor
 
     method Init ()
-      -- Initialize all fields.
-      -- ...unimplemented...
+      bufferNextIn = 0
+      bufferNextOut = 0
+      bufferLength = 0     
+      itemCount = 0
+      myMutex = new Mutex
+      mutexPtr = &myMutex
     endMethod
 
       method addItem (c: char)
@@ -396,14 +403,16 @@ code Main
         -- var i and j have been declared and will be used for printing. 
        
         -- implementation follows ...
-
+        myMutex.Lock()
         if itemCount == BUFFER_SIZE
-          not_full.wait()
+          not_full.Wait(mutexPtr)
         endIf
-        putItemIntoBuffer(item)
+        buffer[bufferNextIn] = c
+        bufferLength = bufferLength + 1
+        bufferNextIn = (bufferNextIn + 1) % BUFFER_SIZE
         itemCount = itemCount + 1
         if itemCount == 1
-          not_empty.signal()
+          not_empty.Signal(mutexPtr)
         endIf
        
         
@@ -425,7 +434,7 @@ code Main
             printChar (' ')
             endFor
         -------------- Printing Done ------------------------------------
-
+        myMutex.Unlock()
         endMethod
 
     method removeItem ()
@@ -439,14 +448,16 @@ code Main
  
         
         -- implementation follows ...
-
+        myMutex.Lock()
         if itemCount == 0
-          not_empty.wait()
+          not_empty.Wait(mutexPtr)
         endIf
-        item = removeItemFromBuffer()
+        c = buffer[bufferNextOut]
+        bufferNextOut = (bufferNextOut + 1) % BUFFER_SIZE
+        bufferLength = bufferLength - 1
         itemCount = itemCount - 1
         if itemCount == BUFFER_SIZE - 1
-          not_full.signal()
+          not_full.Signal(mutexPtr)
         endIf
 	
 	
@@ -467,7 +478,7 @@ code Main
             printChar (' ')
             endFor
         ---------------- Printing Done ------------------------------------
-     
+         myMutex.Unlock()
 	 endMethod
   endBehavior
 
