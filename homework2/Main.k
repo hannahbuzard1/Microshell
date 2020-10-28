@@ -392,6 +392,8 @@ code Main
       bufferLength = 0     
       itemCount = 0
       myMutex = new Mutex
+      not_full = new Condition
+      not_empty = new Condition
       mutexPtr = &myMutex
     endMethod
 
