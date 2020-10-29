@@ -412,12 +412,13 @@ code Main
         myMutex.Lock()
         if itemCount == BUFFER_SIZE
           not_full.Wait(mutexPtr)
+        else
+          buffer[bufferNextIn] = c
+          bufferLength = bufferLength + 1
+          bufferNextIn = (bufferNextIn + 1) % BUFFER_SIZE
+          itemCount = itemCount + 1
         endIf
-        buffer[bufferNextIn] = c
-        bufferLength = bufferLength + 1
-        bufferNextIn = (bufferNextIn + 1) % BUFFER_SIZE
-        itemCount = itemCount + 1
-        if itemCount == 1
+        if itemCount > 0
           not_empty.Signal(mutexPtr)
         endIf
        
