@@ -387,16 +387,16 @@ code Main
   behavior BufferMonitor
 
     method Init ()
-      buffer = new array of char {BUFFER_SIZE of ' '} --array initialization (must initialize the elements to something
-      bufferNextIn = 0                                --initialize in and out to 0, along with length and item count
+      buffer = new array of char {BUFFER_SIZE of '?'}
+      bufferNextIn = 0
       bufferNextOut = 0
       bufferLength = 0     
       itemCount = 0
-      myMutex = new Mutex 
+      myMutex = new Mutex
       not_full = new Condition
       not_empty = new Condition
       mutexPtr = &myMutex
-      myMutex.Init()                                  --must initialize all mutexes and conditions
+      myMutex.Init()
       not_full.Init()
       not_empty.Init()
     endMethod
@@ -410,18 +410,18 @@ code Main
        
         -- implementation follows ...
         myMutex.Lock()
-        printInt(itemCount)
-        if itemCount == BUFFER_SIZE   --if the buffer is full, wait and do not add any more items
+        if itemCount == BUFFER_SIZE
           not_full.Wait(mutexPtr)
         else
-          buffer[bufferNextIn] = c      
+          buffer[bufferNextIn] = c
           bufferLength = bufferLength + 1
-          bufferNextIn = (bufferNextIn + 1) % BUFFER_SIZE     --modulus is to ensure circular buffer
+          bufferNextIn = (bufferNextIn + 1) % BUFFER_SIZE
           itemCount = itemCount + 1
-        if itemCount >= 1
+        endIf
+        if itemCount != 0
           not_empty.Signal(mutexPtr)
         endIf
-        endIf       
+       
         
 
 
@@ -441,7 +441,7 @@ code Main
             printChar (' ')
             endFor
         -------------- Printing Done ------------------------------------
-        myMutex.Unlock() 
+        myMutex.Unlock()
         endMethod
 
     method removeItem ()
@@ -456,14 +456,14 @@ code Main
         
         -- implementation follows ...
         myMutex.Lock()
-        if itemCount == 0              --if there are no more items left to be removed, wait and do not remove an item
+        if itemCount == 0
           not_empty.Wait(mutexPtr)
         endIf
-        c = buffer[bufferNextOut]      --if there are items that can be removed, remove them and update necessary variables
-        bufferNextOut = (bufferNextOut + 1) % BUFFER_SIZE  --modulus used to ensure circular buffer
+        c = buffer[bufferNextOut]
+        bufferNextOut = (bufferNextOut + 1) % BUFFER_SIZE
         bufferLength = bufferLength - 1
         itemCount = itemCount - 1
-        if itemCount == BUFFER_SIZE - 1  
+        if itemCount == BUFFER_SIZE - 1
           not_full.Signal(mutexPtr)
         endIf
 	

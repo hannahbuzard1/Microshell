@@ -26269,8 +26269,8 @@ _Label_724:
 	mov	5,r1
 	store	r1,[r14+-40]
 _Label_575:
-!   Data Move: *_temp_573 = 63  (sizeInBytes=1)
-	mov	63,r1
+!   Data Move: *_temp_573 = 32  (sizeInBytes=1)
+	mov	32,r1
 	load	[r14+-44],r2
 	storeb	r1,[r2]
 !   _temp_573 = _temp_573 + 1
@@ -26580,8 +26580,17 @@ _Label_726:
 	store	r1,[r15]
 	add	r2,8,r2
 	call	r2
-! IF STATEMENT...
+! CALL STATEMENT...
+!   Prepare Argument: offset=8  value=itemCount  sizeInBytes=4
+	load	[r14+8],r1
+	load	[r1+80],r1
+	store	r1,[r15+0]
+!   Call the function
 	mov	413,r13		! source line 413
+	mov	"\0\0CE",r10
+	call	printInt
+! IF STATEMENT...
+	mov	414,r13		! source line 414
 	mov	"\0\0IF",r10
 !   if itemCount != 5 then goto _Label_598		(int)
 	load	[r14+8],r1
@@ -26592,10 +26601,10 @@ _Label_726:
 !	_Label_597	jmp	_Label_597
 _Label_597:
 ! THEN...
-	mov	414,r13		! source line 414
+	mov	415,r13		! source line 415
 	mov	"\0\0TN",r10
 ! SEND STATEMENT...
-	mov	414,r13		! source line 414
+	mov	415,r13		! source line 415
 	mov	"\0\0SE",r10
 !   _temp_599 = &not_full
 	load	[r14+8],r1
@@ -26616,10 +26625,10 @@ _Label_597:
 	jmp	_Label_600
 _Label_598:
 ! ELSE...
-	mov	416,r13		! source line 416
+	mov	417,r13		! source line 417
 	mov	"\0\0EL",r10
 ! ASSIGNMENT STATEMENT...
-	mov	416,r13		! source line 416
+	mov	417,r13		! source line 417
 	mov	"\0\0AS",r10
 !   _temp_601 = &buffer
 	load	[r14+8],r1
@@ -26650,7 +26659,7 @@ _Label_598:
 	load	[r14+-68],r2
 	storeb	r1,[r2]
 ! ASSIGNMENT STATEMENT...
-	mov	417,r13		! source line 417
+	mov	418,r13		! source line 418
 	mov	"\0\0AS",r10
 !   bufferLength = bufferLength + 1		(int)
 	load	[r14+8],r1
@@ -26661,7 +26670,7 @@ _Label_598:
 	load	[r14+8],r2
 	store	r1,[r2+24]
 ! ASSIGNMENT STATEMENT...
-	mov	418,r13		! source line 418
+	mov	419,r13		! source line 419
 	mov	"\0\0AS",r10
 !   _temp_603 = bufferNextIn + 1		(int)
 	load	[r14+8],r1
@@ -26680,7 +26689,7 @@ _Label_598:
 	load	[r14+8],r2
 	store	r1,[r2+16]
 ! ASSIGNMENT STATEMENT...
-	mov	419,r13		! source line 419
+	mov	420,r13		! source line 420
 	mov	"\0\0AS",r10
 !   itemCount = itemCount + 1		(int)
 	load	[r14+8],r1
@@ -26690,18 +26699,16 @@ _Label_598:
 	bvs	_runtimeErrorOverflow
 	load	[r14+8],r2
 	store	r1,[r2+80]
-! END IF...
-_Label_600:
 ! IF STATEMENT...
 	mov	421,r13		! source line 421
 	mov	"\0\0IF",r10
-!   if itemCount <= 0 then goto _Label_605		(int)
+!   if itemCount < 1 then goto _Label_605		(int)
 	load	[r14+8],r1
 	load	[r1+80],r1
-	mov	0,r2
+	mov	1,r2
 	cmp	r1,r2
 	bvs	_runtimeErrorOverflow
-	ble	_Label_605
+	bl	_Label_605
 !	_Label_604	jmp	_Label_604
 _Label_604:
 ! THEN...
@@ -26728,6 +26735,8 @@ _Label_604:
 	call	r2
 ! END IF...
 _Label_605:
+! END IF...
+_Label_600:
 ! CALL STATEMENT...
 !   _temp_607 = _StringConst_44
 	set	_StringConst_44,r1
