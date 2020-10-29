@@ -410,18 +410,16 @@ code Main
        
         -- implementation follows ...
         myMutex.Lock()
-        printInt(itemCount)
-        if itemCount == BUFFER_SIZE   --if the buffer is full, wait and do not add any more items
+        while itemCount == BUFFER_SIZE   --while the buffer is full, wait and do not add any more items
           not_full.Wait(mutexPtr)
-        else
-          buffer[bufferNextIn] = c      
-          bufferLength = bufferLength + 1
-          bufferNextIn = (bufferNextIn + 1) % BUFFER_SIZE     --modulus is to ensure circular buffer
-          itemCount = itemCount + 1
-        if itemCount >= 1
+        endWhile                         --if the buffer is not full, add item to buffer and update necessary variables
+        buffer[bufferNextIn] = c      
+        bufferLength = bufferLength + 1
+        bufferNextIn = (bufferNextIn + 1) % BUFFER_SIZE     --modulus is to ensure circular buffer
+        itemCount = itemCount + 1
+        if itemCount > 0                 --while there are items in the buffer, signal that consumers can run
           not_empty.Signal(mutexPtr)
         endIf
-        endIf       
         
 
 
@@ -456,14 +454,14 @@ code Main
         
         -- implementation follows ...
         myMutex.Lock()
-        if itemCount == 0              --if there are no more items left to be removed, wait and do not remove an item
+        while itemCount == 0              --while there are no items left to be removed, wait and do not remove an item
           not_empty.Wait(mutexPtr)
-        endIf
+        endWhile
         c = buffer[bufferNextOut]      --if there are items that can be removed, remove them and update necessary variables
         bufferNextOut = (bufferNextOut + 1) % BUFFER_SIZE  --modulus used to ensure circular buffer
         bufferLength = bufferLength - 1
         itemCount = itemCount - 1
-        if itemCount == BUFFER_SIZE - 1  
+        if itemCount == BUFFER_SIZE - 1  --once there are less than BUFFER_SIZE items in the buffer, single that more producers can run
           not_full.Signal(mutexPtr)
         endIf
 	
