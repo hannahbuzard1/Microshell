@@ -55,7 +55,7 @@ code Thread
 
 -----------------------------  AddToPriorityQueues  ---------------------------------
 
-  function AddToPriorityQueues (currentThread: ptr to Thread)
+  function AddToPriorityQueues (currThread: ptr to Thread)
     --
     -- Get priority of the thread that is passed in
     -- and add that thread to its appropriate priority queue
@@ -64,19 +64,19 @@ code Thread
       priority : int
     priority = currentThread.priority
     if priority == 1
-        priority1.AddToEnd(currentThread)
+        priority1.AddToEnd(currThread)
     endIf
     if priority == 2
-        priority2.AddToEnd(currentThread)
+        priority2.AddToEnd(currThread)
     endIf
     if priority == 3
-        priority3.AddToEnd(currentThread)
+        priority3.AddToEnd(currThread)
     endIf
     if priority == 4
-        priority4.AddToEnd(currentThread)
+        priority4.AddToEnd(currThread)
     endIf
     if priority == 5
-        priority5.AddToEnd(currentThread)
+        priority5.AddToEnd(currThread)
     endIf
     endFunction
 
