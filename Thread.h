@@ -54,7 +54,7 @@ header Thread
       initialArgument: int                      -- The argument to that function
       systemStack: array [SYSTEM_STACK_SIZE] of int
     methods
-      Init (n: ptr to array of char, newpriority: int)
+      Init (n: ptr to array of char)
       Fork (fun: ptr to function (int), arg: int)
       Yield ()
       Sleep ()
