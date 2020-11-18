@@ -17,6 +17,9 @@ header Thread
     FatalError (errorMessage: ptr to array of char)
     SetInterruptsTo (newStatus: int) returns int
     TimerInterruptHandler ()
+    AddToPriorityQueues (currentThread: ptr to Thread)
+    FetchFromPriorityQueues () returns ptr to Thread
+    QueuesEmpty() returns bool 
 
     external Switch (prevThread, nextThread: ptr to Thread)
     external ThreadStartUp ()
@@ -24,6 +27,11 @@ header Thread
   var
 
     readyList: List [Thread]
+    priority1 : List [Thread]
+    priority2 : List [Thread]
+    priority3 : List [Thread]
+    priority4 : List [Thread]
+    priority5 : List [Thread]
     currentThread: ptr to Thread
     mainThread: Thread
     idleThread: Thread
@@ -40,6 +48,7 @@ header Thread
       regs: array [13] of int        -- Space for r2..r14
       stackTop: ptr to void          -- Space for r15 (system stack top ptr)
       name: ptr to array of char
+      priority: int
       status: int                    -- JUST_CREATED, READY, RUNNING, BLOCKED, UNUSED
       initialFunction: ptr to function (int)    -- The thread's "main" function
       initialArgument: int                      -- The argument to that function
@@ -51,6 +60,8 @@ header Thread
       Sleep ()
       CheckOverflow ()
       Print ()
+      setPriority (newpri : int)
+      getPriority () returns int
   endClass
 
 endHeader
