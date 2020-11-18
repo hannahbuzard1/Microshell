@@ -281,22 +281,22 @@ code Thread
       currentInterruptStatus = DISABLED
       --printChar ('_')
       if currentThread.priority == 1
-        if  priority2.IsEmpty == false || priority3.IsEmpty == false || priority4.IsEmpty == false || priority5.IsEmpty == false
+        if  priority2.IsEmpty() == false || priority3.IsEmpty() == false || priority4.IsEmpty() == false || priority5.IsEmpty() == false
             currentThread.Yield()
         endIf 
       endIf
       if currentThread.priority == 2
-        if priority3.IsEmpty == false || priority4.IsEmpty == false || priority5.IsEmpty == false
+        if priority3.IsEmpty() == false || priority4.IsEmpty() == false || priority5.IsEmpty() == false
             currentThread.Yield()
         endIf 
       endIf
       if currentThread.priority == 3
-        if priority4.IsEmpty == false || priority5.IsEmpty == false
+        if priority4.IsEmpty() == false || priority5.IsEmpty() == false
             currentThread.Yield()
         endIf 
       endIf
       if currentThread.priority == 4
-        if priority5.IsEmpty == false
+        if priority5.IsEmpty() == false
             currentThread.Yield()
         endIf
       endIf
