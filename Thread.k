@@ -162,11 +162,11 @@ code Thread
 
       if priority5.IsEmpty() == false
         returningThread = priority5.Remove()
-      else if priority4.IsEmpty() == false
+      elseIf priority4.IsEmpty() == false
         returningThread = priority4.Remove()
-      else if priority3.IsEmpty() == false
+      elseIf priority3.IsEmpty() == false
         returningThread = priority3.Remove()
-      else if priority2.IsEmpty() == false
+      elseIf priority2.IsEmpty() == false
         returningThread = priority2.Remove()
       else
         returningThread = priority1.Remove()
@@ -278,24 +278,33 @@ code Thread
     -- to "Yield" in the code below.  Threads will then execute until they
     -- call "Yield" explicitly, or until they call "Sleep".)
     --
-      var
       currentInterruptStatus = DISABLED
       --printChar ('_')
       if currentThread.priority == 1
         if priority1.size > 1 || priority2.IsEmpty == false || priority3.IsEmpty == false || priority4.IsEmpty == false || priority5.IsEmpty == false
+        endIf 
+      endIf
             currentThread.Yield()
       if currentThread.priority == 2
         if priority2.size > 1 || priority3.IsEmpty == false || priority4.IsEmpty == false || priority5.IsEmpty == false
             currentThread.Yield()
+        endIf 
+      endIf
       if currentThread.priority == 3
         if priority3.size > 1 || priority4.IsEmpty == false || priority5.IsEmpty == false
             currentThread.Yield()
+        endIf 
+      endIf
       if currentThread.priority == 4
         if priority4.size > 1 || priority5.IsEmpty == false
             currentThread.Yield()
+        endIf
+      endIf
       if currentThread.priority == 5
         if priority5.size > 1
             currentThread.Yield()
+        endIf 
+      endIf
     currentInterruptStatus = ENABLED
     endFunction
 
