@@ -27,11 +27,11 @@ header Thread
   var
 
     readyList: List [Thread]
-    priority1 : List [Thread]
-    priority2 : List [Thread]
-    priority3 : List [Thread]
-    priority4 : List [Thread]
-    priority5 : List [Thread]
+    priority1: List [Thread]
+    priority2: List [Thread]
+    priority3: List [Thread]
+    priority4: List [Thread]
+    priority5: List [Thread]
     currentThread: ptr to Thread
     mainThread: Thread
     idleThread: Thread
