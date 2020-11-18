@@ -278,37 +278,49 @@ code Thread
     -- to "Yield" in the code below.  Threads will then execute until they
     -- call "Yield" explicitly, or until they call "Sleep".)
     --
+    var
+      removedThread : ptr to Thread
       currentInterruptStatus = DISABLED
       --printChar ('_')
       if currentThread.priority == 1
-        priority1.Remove()
+        removedThread = priority1.Remove()
         if  priority1.IsEmpty() == false
+            priority1.AddToFront(removedThread)
             currentThread.Yield()
         endIf
+        priority1.AddToFront(removedThread)
       endIf
       if currentThread.priority == 2
-        priority2.Remove()
+        removedThread = priority2.Remove()
         if priority1.IsEmpty() == false || priority2.IsEmpty() == false
+            priority2.AddToFront(removedThread)
             currentThread.Yield()
         endIf
+        priority2.AddToFront(removedThread)
       endIf
       if currentThread.priority == 3
-        priority3.Remove()
+        removedThread = priority3.Remove()
         if priority2.IsEmpty() == false || priority1.IsEmpty() == false || priority3.IsEmpty()
+            priority3.AddToFront(removedThread)
             currentThread.Yield()
         endIf
+        priority3.AddToFront(removedThread)
       endIf
       if currentThread.priority == 4
-        priority4.Remove()
+        removedThread = priority4.Remove()
         if priority3.IsEmpty() == false || priority2.IsEmpty() == false || priority1.IsEmpty() == false || priority4.IsEmpty() == false
+            priority4.AddToFront(removedThread)
             currentThread.Yield()
         endIf
+        priority4.AddToFront(removedThread)
       endIf
       if currentThread.priority == 5
-        priority5.Remove()
+        removedThread = priority5.Remove()
         if priority1.IsEmpty() == false || priority2.IsEmpty() == false || priority3.IsEmpty() == false || priority4.IsEmpty() == false || priority5.IsEmpty() == false
+            priority5.AddToFront(removedThread)
             currentThread.Yield()
         endIf
+        priority5.AddToFront(removedThread)
       endIf
     currentInterruptStatus = ENABLED
     endFunction
