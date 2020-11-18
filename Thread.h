@@ -17,7 +17,7 @@ header Thread
     FatalError (errorMessage: ptr to array of char)
     SetInterruptsTo (newStatus: int) returns int
     TimerInterruptHandler ()
-    AddToPriorityQueues (currentThread: ptr to Thread)
+    AddToPriorityQueues (currThread: ptr to Thread)
     FetchFromPriorityQueues () returns ptr to Thread
     QueuesEmpty() returns bool 
 
@@ -54,7 +54,7 @@ header Thread
       initialArgument: int                      -- The argument to that function
       systemStack: array [SYSTEM_STACK_SIZE] of int
     methods
-      Init (n: ptr to array of char)
+      Init (n: ptr to array of char, newpri: int)
       Fork (fun: ptr to function (int), arg: int)
       Yield ()
       Sleep ()
