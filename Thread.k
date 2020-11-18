@@ -354,13 +354,13 @@ code Thread
 
       ----------  Thread . Init  ----------
 
-      method Init (n: String, newpriority: int)
+      method Init (n: String)
         --
         -- Initialize this Thread object, but do not schedule it for
         -- execution yet.
         --
           name = n
-          priority = newpriority
+          priority = 3
           status = JUST_CREATED
           -- The next line initializes the systemStack array, without filling it in.
           *((& systemStack) asPtrTo int) = SYSTEM_STACK_SIZE
