@@ -14,6 +14,11 @@ code Thread
       Cleari ()
       print ("Initializing Thread Scheduler...\n")
       readyList = new List [Thread]
+      priority1 = new List [Thread]
+      priority2 = new List [Thread]
+      priority3 = new List [Thread]
+      priority4 = new List [Thread]
+      priority5 = new List [Thread]
       threadsToBeDestroyed = new List [Thread]
       mainThread = new Thread
       mainThread.Init ("main-thread")
@@ -40,13 +45,56 @@ code Thread
       var junk: int
       while true
         junk = SetInterruptsTo (DISABLED)
-        if readyList.IsEmpty ()
+        if readyList.IsEmpty () && priority1.IsEmpty() && priority2.isEmpty() && priority3.isEmpty() && priority4.isEmpty && priority5.isEmpty
           Wait ()
         else
           currentThread.Yield ()
         endIf
       endWhile
     endFunction
+
+-----------------------------  AddToPriorityQueues  ---------------------------------
+
+  function AddToPriorityQueues (currentThread: ptr to Thread)
+    --
+    -- Get priority of the thread that is passed in
+    -- and add that thread to its appropriate priority queue
+    --
+    var
+      priority : int
+    priority = currentThread.priority
+    if priority == 1
+        priority1.AddToEnd(currentThread)
+    endIf
+    if priority == 2
+        priority2.AddToEnd(currentThread)
+    endIf
+    if priority == 3
+        priority3.AddToEnd(currentThread)
+    endIf
+    if priority == 4
+        priority4.AddToEnd(currentThread)
+    endIf
+    if priority == 5
+        priority5.AddToEnd(currentThread)
+    endIf
+    endFunction
+
+
+-----------------------------  QueuesEmpty  ---------------------------------
+
+  function QueuesEmpty ()
+    --
+    -- Returns true if there are no threads in any of the queues
+    -- returns false if there is at least one thread in a queue
+    --
+    if priority1.isEmpty == true && priority2.isEmpty == true && priority3.isEmpty == true && priority4.isEmpty == true && priority5.isEmpty == true
+        return true
+    else
+        return false
+    endIf
+    endFunction
+
 
 -----------------------------  Run  ---------------------------------
 
@@ -90,9 +138,40 @@ code Thread
     --
     var oldStatus: int
       oldStatus = SetInterruptsTo (DISABLED)
-        print ("Here is the ready list:\n")
-        readyList.ApplyToEach (ThreadPrint)
+        print ("Here is the priority1 list:\n")
+        priority1.ApplyToEach (ThreadPrint)
+        print ("Here is the priority2 list:\n")
+        priority2.ApplyToEach (ThreadPrint)
+        print ("Here is the priority3 list:\n")
+        priority3.ApplyToEach (ThreadPrint)
+        print ("Here is the priority4 list:\n")
+        priority4.ApplyToEach (ThreadPrint)
+        print ("Here is the priority5 list:\n")
+        priority5.ApplyToEach (ThreadPrint)
       oldStatus = SetInterruptsTo (oldStatus)
+    endFunction
+
+-----------------------------  FetchFromPriorityQueues ---------------------------------
+
+  function FetchFromPriorityQueues ()
+    --
+    -- Fetches and returns highest priority thread
+    --
+      var
+        returningThread : ptr to Thread
+
+      if priority5.IsEmpty() == false
+        returningThread = priority5.Remove()
+      else if priority4.IsEmpty() == false
+        returningThread = priority4.Remove()
+      else if priority3.IsEmpty() == false
+        returningThread = priority3.Remove()
+      else if priority2.IsEmpty() == false
+        returningThread = priority2.Remove()
+      else
+        returningThread = priority1.Remove()
+    endIf
+    return returningThread
     endFunction
 
 -----------------------------  ThreadStartMain  ---------------------------------
@@ -199,10 +278,25 @@ code Thread
     -- to "Yield" in the code below.  Threads will then execute until they
     -- call "Yield" explicitly, or until they call "Sleep".)
     --
+      var
       currentInterruptStatus = DISABLED
       --printChar ('_')
-      currentThread.Yield ()
-      currentInterruptStatus = ENABLED
+      if currentThread.priority == 1
+        if priority1.size > 1 || priority2.IsEmpty == false || priority3.IsEmpty == false || priority4.IsEmpty == false || priority5.IsEmpty == false
+            currentThread.Yield()
+      if currentThread.priority == 2
+        if priority2.size > 1 || priority3.IsEmpty == false || priority4.IsEmpty == false || priority5.IsEmpty == false
+            currentThread.Yield()
+      if currentThread.priority == 3
+        if priority3.size > 1 || priority4.IsEmpty == false || priority5.IsEmpty == false
+            currentThread.Yield()
+      if currentThread.priority == 4
+        if priority4.size > 1 || priority5.IsEmpty == false
+            currentThread.Yield()
+      if currentThread.priority == 5
+        if priority5.size > 1
+            currentThread.Yield()
+    currentInterruptStatus = ENABLED
     endFunction
 
 -----------------------------  ThreadPrint  ---------------------------------
@@ -251,12 +345,13 @@ code Thread
 
       ----------  Thread . Init  ----------
 
-      method Init (n: String)
+      method Init (n: String, newpri: int)
         --
         -- Initialize this Thread object, but do not schedule it for
         -- execution yet.
         --
           name = n
+          priority = newpri
           status = JUST_CREATED
           -- The next line initializes the systemStack array, without filling it in.
           *((& systemStack) asPtrTo int) = SYSTEM_STACK_SIZE
@@ -274,10 +369,11 @@ code Thread
         -- it will make it ready to run by adding it to the "ready queue."  This
         -- method is passed a function and a single integer argument.  When the
         -- thread runs, the thread will execute this function on that argument
-        -- and then termiante.  This method will return after scheduling this
+        -- and then terminate. This method will return after scheduling this
         -- thread.
         --
           var
+            threadpri : int
             oldIntStat, junk: int
           oldIntStat = SetInterruptsTo (DISABLED)
           -- print ("Forking thread...\n")
@@ -286,7 +382,22 @@ code Thread
           stackTop = stackTop - 4
           *(stackTop asPtrTo int) = ThreadStartUp asInteger
           status = READY
-          readyList.AddToEnd (self)
+          threadpri = self.priority
+          if threadpri == 1
+            priority1.AddToEnd(self)
+          endIf
+          if threadpri == 2
+            priority2.AddToEnd(self)
+          endIf
+          if threadpri == 3
+            priority3.AddToEnd(self)
+          endIf
+          if threadpri == 4
+            priority4.AddToEnd(self)
+          endIf
+          if threadpri == 5
+            priority5.AddToEnd(self)
+          endIf
           junk = SetInterruptsTo (oldIntStat)
         endMethod
 
@@ -377,6 +488,27 @@ code Thread
           endIf
         endMethod
 
+    ----------  Thread . setPriority ----------
+
+    method setPriority (newpri: int)
+      --
+      -- Sets thread's priority to given integer (between 1 and 5)
+      --
+        self.priority = newpri
+      endMethod
+
+  ----------  Thread . getPriority ----------
+
+  method getPriority ()
+    --
+    -- gets and returns thread's priority
+    --
+    var
+      currentpri : int
+      currentpri = self.priority
+      return currentpri
+    endMethod
+
       ----------  Thread . Print  ----------
 
       method Print ()
@@ -388,6 +520,8 @@ code Thread
           oldStatus = SetInterruptsTo (DISABLED)
           print ("  Thread \"")
           print (name)
+          print (" Priority : ")
+          print(priority)
           print ("\"    (addr of Thread object: ")
           printHex (self asInteger)
           print (")\n")
