@@ -281,27 +281,32 @@ code Thread
       currentInterruptStatus = DISABLED
       --printChar ('_')
       if currentThread.priority == 1
+        priority1.Remove(currentThread)
         if  priority1.IsEmpty() == false
             currentThread.Yield()
         endIf
       endIf
       if currentThread.priority == 2
-        if priority1.IsEmpty() == false
+        priority2.Remove(currentThread)
+        if priority1.IsEmpty() == false || priority2.IsEmpty == false
             currentThread.Yield()
         endIf
       endIf
       if currentThread.priority == 3
-        if priority2.IsEmpty() == false || priority1.IsEmpty() == false
+        priority3.Remove(currentThread)
+        if priority2.IsEmpty() == false || priority1.IsEmpty() == false || priority3.IsEmpty()
             currentThread.Yield()
         endIf
       endIf
       if currentThread.priority == 4
-        if priority3.IsEmpty() == false || priority2.IsEmpty() == false || priority1.IsEmpty() == false
+        priority4.Remove(currentThread)
+        if priority3.IsEmpty() == false || priority2.IsEmpty() == false || priority1.IsEmpty() == false || priority4.IsEmpty() == false
             currentThread.Yield()
         endIf
       endIf
       if currentThread.priority == 5
-        if priority1.IsEmpty() == false || priority2.IsEmpty() == false || priority3.IsEmpty() == false || priority4.IsEmpty() == false
+        priority5.Remove(currentThread)
+        if priority1.IsEmpty() == false || priority2.IsEmpty() == false || priority3.IsEmpty() == false || priority4.IsEmpty() == false || priority5.IsEmpty() == false
             currentThread.Yield()
         endIf
       endIf
@@ -458,7 +463,6 @@ code Thread
             endIf
             if self.priority == 5
               priority5.AddToEnd(self)
-            endIf
             Run (nextTh)
           endIf
           junk = SetInterruptsTo (oldIntStat)
