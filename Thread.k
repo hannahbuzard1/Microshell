@@ -83,7 +83,7 @@ code Thread
 
 -----------------------------  QueuesEmpty  ---------------------------------
 
-  function QueuesEmpty ()
+  function QueuesEmpty () returns bool 
     --
     -- Returns true if there are no threads in any of the queues
     -- returns false if there is at least one thread in a queue
@@ -153,7 +153,7 @@ code Thread
 
 -----------------------------  FetchFromPriorityQueues ---------------------------------
 
-  function FetchFromPriorityQueues ()
+  function FetchFromPriorityQueues () returns ptr to Thread
     --
     -- Fetches and returns highest priority thread
     --
@@ -508,7 +508,7 @@ code Thread
 
   ----------  Thread . getPriority ----------
 
-  method getPriority ()
+  method getPriority () returns int
     --
     -- gets and returns thread's priority
     --
