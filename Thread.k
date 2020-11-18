@@ -463,6 +463,7 @@ code Thread
             endIf
             if self.priority == 5
               priority5.AddToEnd(self)
+            endIf
             Run (nextTh)
           endIf
           junk = SetInterruptsTo (oldIntStat)
