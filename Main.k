@@ -50,43 +50,43 @@ code Main
 
       a1Thread = new Thread
       a1Thread.Init ("A1")   -- Initialize, giving thread a name
-      a1Thread.setPriority(1);
+      a1Thread.setPriority(1)
 
       a2Thread = new Thread
       a2Thread.Init ("A2")   -- Initialize, giving thread a name
-      a2Thread.setPriority(1);
+      a2Thread.setPriority(1)
 
       b1Thread = new Thread
       b1Thread.Init ("B1")   -- Initialize, giving thread a name
-      b1Thread.setPriority(2);
+      b1Thread.setPriority(2)
 
       b2Thread = new Thread
       b2Thread.Init ("B2")   -- Initialize, giving thread a name
-      b2Thread.setPriority(2);
+      b2Thread.setPriority(2)
 
       c1Thread = new Thread
       c1Thread.Init ("C1")   -- Initialize, giving thread a name
-      c1Thread.setPriority(3);
+      c1Thread.setPriority(3)
 
       c2Thread = new Thread
       c2Thread.Init ("C2")   -- Initialize, giving thread a name
-      c2Thread.setPriority(3);
+      c2Thread.setPriority(3)
 
       d1Thread = new Thread
       d1Thread.Init ("D1")   -- Initialize, giving thread a name
-      d1Thread.setPriority(4);
+      d1Thread.setPriority(4)
 
       d2Thread = new Thread
       d2Thread.Init ("D2")   -- Initialize, giving thread a name
-      d2Thread.setPriority(4);
+      d2Thread.setPriority(4)
 
       e1Thread = new Thread
       e1Thread.Init ("E1")   -- Initialize, giving thread a name
-      e1Thread.setPriority(5);
+      e1Thread.setPriority(5)
 
       e2Thread = new Thread
       e2Thread.Init ("E2")   -- Initialize, giving thread a name
-      e2Thread.setPriority(5);
+      e2Thread.setPriority(5)
 
 
       e2Thread.Fork (PriorityThreadFunction, 50)
