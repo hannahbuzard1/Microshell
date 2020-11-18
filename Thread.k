@@ -88,7 +88,7 @@ code Thread
     -- Returns true if there are no threads in any of the queues
     -- returns false if there is at least one thread in a queue
     --
-    if priority1.isEmpty == true && priority2.isEmpty == true && priority3.isEmpty == true && priority4.isEmpty == true && priority5.isEmpty == true
+    if priority1.IsEmpty() == true && priority2.IsEmpty() == true && priority3.IsEmpty() == true && priority4.IsEmpty() == true && priority5.IsEmpty() == true
         return true
     else
         return false
