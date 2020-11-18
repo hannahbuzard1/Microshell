@@ -83,7 +83,7 @@ code Thread
 
 -----------------------------  QueuesEmpty  ---------------------------------
 
-  function QueuesEmpty () returns bool 
+  function QueuesEmpty () returns bool
     --
     -- Returns true if there are no threads in any of the queues
     -- returns false if there is at least one thread in a queue
@@ -281,29 +281,29 @@ code Thread
       currentInterruptStatus = DISABLED
       --printChar ('_')
       if currentThread.priority == 1
-        if  priority2.IsEmpty() == false || priority3.IsEmpty() == false || priority4.IsEmpty() == false || priority5.IsEmpty() == false
+        if  priority1.IsEmpty() == false
             currentThread.Yield()
-        endIf 
+        endIf
       endIf
       if currentThread.priority == 2
-        if priority3.IsEmpty() == false || priority4.IsEmpty() == false || priority5.IsEmpty() == false
+        if priority1.IsEmpty() == false
             currentThread.Yield()
-        endIf 
+        endIf
       endIf
       if currentThread.priority == 3
-        if priority4.IsEmpty() == false || priority5.IsEmpty() == false
+        if priority2.IsEmpty() == false || priority1.IsEmpty() == false
             currentThread.Yield()
-        endIf 
+        endIf
       endIf
       if currentThread.priority == 4
-        if priority5.IsEmpty() == false
+        if priority3.IsEmpty() == false || priority2.IsEmpty() == false || priority1.IsEmpty() == false
             currentThread.Yield()
         endIf
       endIf
       if currentThread.priority == 5
-        if priority5.IsEmpty() == true
+        if priority1.IsEmpty() == false || priority2.IsEmpty() == false || priority3.IsEmpty() == false || priority4.IsEmpty() == false
             currentThread.Yield()
-        endIf 
+        endIf
       endIf
     currentInterruptStatus = ENABLED
     endFunction
@@ -435,7 +435,7 @@ code Thread
           -- print ("Yielding ")
           -- print (name)
           -- print ("\n")
-          nextTh = readyList.Remove ()
+          nextTh = FetchFromPriorityQueues ()
           if nextTh
             -- print ("About to run ")
             -- print (nextTh.name)
@@ -444,7 +444,20 @@ code Thread
               FatalError ("Status of current thread should be READY or RUNNING")
             endIf
             status = READY
-            readyList.AddToEnd (self)
+            if self.priority == 1
+              priority1.AddToEnd(self)
+            endIf
+            if self.priority == 2
+              priority2.AddToEnd(self)
+            endIf
+            if self.priority == 3
+              priority3.AddToEnd(self)
+            endIf
+            if self.priority == 4
+              priority4.AddToEnd(self)
+            endIf
+            if self.priority == 5
+              priority5.AddToEnd(self)
             Run (nextTh)
           endIf
           junk = SetInterruptsTo (oldIntStat)
@@ -475,7 +488,7 @@ code Thread
           -- print (name)
           -- print ("\n")
           status = BLOCKED
-          nextTh = readyList.Remove ()
+          nextTh = FetchFromPriorityQueues ()
           if nextTh == null
             FatalError ("Ready list should always contain the idle thread")
           endIf
