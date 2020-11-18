@@ -45,7 +45,7 @@ code Thread
       var junk: int
       while true
         junk = SetInterruptsTo (DISABLED)
-        if readyList.IsEmpty () && priority1.IsEmpty() && priority2.IsEmpty() && priority3.IsEmpty() && priority4.IsEmpty && priority5.IsEmpty
+        if readyList.IsEmpty() && priority1.IsEmpty() && priority2.IsEmpty() && priority3.IsEmpty() && priority4.IsEmpty && priority5.IsEmpty
           Wait ()
         else
           currentThread.Yield ()
@@ -530,7 +530,7 @@ code Thread
           print ("  Thread \"")
           print (name)
           print (" Priority : ")
-          print(priority)
+          printInt(priority)
           print ("\"    (addr of Thread object: ")
           printHex (self asInteger)
           print (")\n")
