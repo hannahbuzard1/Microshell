@@ -111,6 +111,7 @@ code Thread
       var prevThread, th: ptr to Thread
       prevThread = currentThread
       prevThread.CheckOverflow ()
+      print(nextThread.name)
       currentThread = nextThread
       nextThread.status = RUNNING
       --print ("SWITCHING from ")
