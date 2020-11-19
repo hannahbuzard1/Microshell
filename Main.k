@@ -88,7 +88,7 @@ code Main
       e2Thread.Init ("E2")   -- Initialize, giving thread a name
       e2Thread.setPriority(5)
 
-
+      print("I am about to fork everything")
       e2Thread.Fork (PriorityThreadFunction, 50)
       a2Thread.Fork (PriorityThreadFunction, 50)
       c2Thread.Fork (PriorityThreadFunction, 50)
