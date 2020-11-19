@@ -10,7 +10,7 @@ code Main
   --     ProducerConsumer
   --     TestMutex
   --     Dining Philospohers
-  --     PriorityThreadExample
+       PriorityThreadExample
 
 
 
