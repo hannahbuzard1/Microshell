@@ -108,6 +108,7 @@ code Main
 
       var i: int
           oldStatus: int
+      print('in priorityThreadFunction')
       for i = 1 to cnt
         oldStatus = SetInterruptsTo (DISABLED)
         print (currentThread.name)
