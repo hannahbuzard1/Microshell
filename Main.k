@@ -49,9 +49,10 @@ code Main
       print ("Priority Thread Example...\n")
 
       a1Thread = new Thread
+      print("I am here")
       a1Thread.Init ("A1")   -- Initialize, giving thread a name
+      print("I am here")
       a1Thread.setPriority(1)
-      print("I initialized one thread")
       a2Thread = new Thread
       a2Thread.Init ("A2")   -- Initialize, giving thread a name
       a2Thread.setPriority(1)
