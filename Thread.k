@@ -45,7 +45,7 @@ code Thread
       var junk: int
       while true
         junk = SetInterruptsTo (DISABLED)
-        if readyList.IsEmpty() && priority1.IsEmpty() && priority2.IsEmpty() && priority3.IsEmpty() && priority4.IsEmpty() && priority5.IsEmpty()
+        if priority1.IsEmpty() && priority2.IsEmpty() && priority3.IsEmpty() && priority4.IsEmpty() && priority5.IsEmpty()
           Wait ()
         else
           currentThread.Yield ()
@@ -160,16 +160,16 @@ code Thread
       var
         returningThread : ptr to Thread
 
-      if priority5.IsEmpty() == false
-        returningThread = priority5.Remove()
-      elseIf priority4.IsEmpty() == false
-        returningThread = priority4.Remove()
-      elseIf priority3.IsEmpty() == false
-        returningThread = priority3.Remove()
+      if priority1.IsEmpty() == false
+        returningThread = priority1.Remove()
       elseIf priority2.IsEmpty() == false
         returningThread = priority2.Remove()
+      elseIf priority3.IsEmpty() == false
+        returningThread = priority3.Remove()
+      elseIf priority4.IsEmpty() == false
+        returningThread = priority4.Remove()
       else
-        returningThread = priority1.Remove()
+        returningThread = priority5.Remove()
     endIf
     return returningThread
     endFunction
@@ -300,7 +300,7 @@ code Thread
       endIf
       if currentThread.priority == 3
         removedThread = priority3.Remove()
-        if priority2.IsEmpty() == false || priority1.IsEmpty() == false || priority3.IsEmpty()
+        if priority2.IsEmpty() == false || priority1.IsEmpty() == false || priority3.IsEmpty() == false
             priority3.AddToFront(removedThread)
             currentThread.Yield()
         endIf
