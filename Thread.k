@@ -111,7 +111,6 @@ code Thread
       var prevThread, th: ptr to Thread
       prevThread = currentThread
       prevThread.CheckOverflow ()
-      print(nextThread.name)
       currentThread = nextThread
       nextThread.status = RUNNING
       --print ("SWITCHING from ")
@@ -515,6 +514,8 @@ code Thread
           endIf
           print("nextTh priority is:")
           printInt(nextTh.priority)
+          print("nextTh name is:")
+          print(nextTh.name)
           Run (nextTh)
           print("am i stuck in sleep?")
         endMethod
