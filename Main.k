@@ -2,7 +2,7 @@ code Main
 
   -- OS Class: Project 2
   --
-  -- <PUT YOUR NAME HERE>
+  -- Hannah Buzard
   --
   -- This package contains the following:
   --     SimpleThreadExample
@@ -10,7 +10,7 @@ code Main
   --     ProducerConsumer
   --     TestMutex
   --     Dining Philospohers
-         PriorityThreadExample
+  --       PriorityThreadExample
 
 
 
@@ -28,7 +28,7 @@ code Main
       -- TestMutex ()
       -- ProducerConsumer ()
       -- DiningPhilosophers ()
-      -- PriorityThreadExample()
+       PriorityThreadExample()
 
       ThreadFinish ()
 
