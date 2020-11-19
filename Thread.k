@@ -213,6 +213,7 @@ code Thread
       -- print (currentThread.name)
       -- print ("\n")
       threadsToBeDestroyed.AddToEnd (currentThread)
+      print("Is this where I am stuck?")
       currentThread.Sleep ()
       -- Execution will never reach the next instruction
       debug
