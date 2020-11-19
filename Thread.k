@@ -159,21 +159,21 @@ code Thread
     --
       var
         returningThread : ptr to Thread
-
+        
       if priority1.IsEmpty() == false
-        print("here, 1)
+        print("here, 1")
         returningThread = priority1.Remove()
       elseIf priority2.IsEmpty() == false
-        print("here, 2)
+        print("here, 2")
         returningThread = priority2.Remove()
       elseIf priority3.IsEmpty() == false
-        print("here, 3)
+        print("here, 3")
         returningThread = priority3.Remove()
       elseIf priority4.IsEmpty() == false
-        print("here, 4)
+        print("here, 4")
         returningThread = priority4.Remove()
       else
-        print("here, 5)
+        print("here, 5")
         returningThread = priority5.Remove()
     endIf
     print(returningThread.name)
