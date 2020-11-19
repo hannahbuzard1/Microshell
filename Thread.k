@@ -504,14 +504,16 @@ code Thread
               if self != currentThread
                 FatalError ("In Sleep, self != currentThread")
               endIf
-          -- print ("Sleeping ")
-          -- print (name)
-          -- print ("\n")
+          print ("Sleeping ")
+          print (name)
+          print ("\n")
           status = BLOCKED
           nextTh = FetchFromPriorityQueues ()
           if nextTh == null
             FatalError ("Ready list should always contain the idle thread")
           endIf
+          print("nextTh priority is:")
+          printInt(nextTh.priority)
           Run (nextTh)
           print("am i stuck in sleep?")
         endMethod
