@@ -48,7 +48,6 @@ code Thread
         if priority1.IsEmpty() && priority2.IsEmpty() && priority3.IsEmpty() && priority4.IsEmpty() && priority5.IsEmpty()
           Wait ()
         else
-          print("Is this where I am getting stuck?")
           currentThread.Yield ()
         endIf
       endWhile
