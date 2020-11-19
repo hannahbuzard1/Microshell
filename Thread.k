@@ -282,6 +282,7 @@ code Thread
       removedThread : ptr to Thread
       currentInterruptStatus = DISABLED
       --printChar ('_')
+      print("Am i stuck in this shitty method?")
       if currentThread.priority == 1
         removedThread = priority1.Remove()
         if  priority1.IsEmpty() == false
@@ -478,6 +479,7 @@ code Thread
             endIf
             Run (nextTh)
           endIf
+          print("am i stuck in yield?")
           junk = SetInterruptsTo (oldIntStat)
         endMethod
 
@@ -511,6 +513,7 @@ code Thread
             FatalError ("Ready list should always contain the idle thread")
           endIf
           Run (nextTh)
+          print("am i stuck in sleep?")
         endMethod
 
       ----------  Thread . CheckOverflow  ----------
