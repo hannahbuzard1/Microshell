@@ -24,7 +24,7 @@ code Main
       -----  Uncomment any one of the following to perform the desired test  -----
 
       -- SimpleThreadExample ()
-      MoreThreadExamples ()
+      -- MoreThreadExamples ()
       -- TestMutex ()
       -- ProducerConsumer ()
       -- DiningPhilosophers ()
