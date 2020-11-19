@@ -278,7 +278,6 @@ code Thread
     -- to "Yield" in the code below.  Threads will then execute until they
     -- call "Yield" explicitly, or until they call "Sleep".)
     --
-    var
       currentInterruptStatus = DISABLED
       --printChar ('_')
       if currentThread.priority == 1
