@@ -161,22 +161,16 @@ code Thread
         returningThread : ptr to Thread
         
       if priority1.IsEmpty() == false
-        print("here, 1")
         returningThread = priority1.Remove()
       elseIf priority2.IsEmpty() == false
-        print("here, 2")
         returningThread = priority2.Remove()
       elseIf priority3.IsEmpty() == false
-        print("here, 3")
         returningThread = priority3.Remove()
       elseIf priority4.IsEmpty() == false
-        print("here, 4")
         returningThread = priority4.Remove()
       else
-        print("here, 5")
         returningThread = priority5.Remove()
     endIf
-    print(returningThread.name)
     return returningThread
     endFunction
 
@@ -219,7 +213,6 @@ code Thread
       -- print (currentThread.name)
       -- print ("\n")
       threadsToBeDestroyed.AddToEnd (currentThread)
-      print("Is this where I am stuck?")
       currentThread.Sleep ()
       -- Execution will never reach the next instruction
       debug
@@ -289,7 +282,6 @@ code Thread
       removedThread : ptr to Thread
       currentInterruptStatus = DISABLED
       --printChar ('_')
-      print("Am i stuck in this shitty method?")
       if currentThread.priority == 1
         removedThread = priority1.Remove()
         if  priority1.IsEmpty() == false
@@ -518,12 +510,7 @@ code Thread
           if nextTh == null
             FatalError ("Ready list should always contain the idle thread")
           endIf
-          print("nextTh priority is:")
-          printInt(nextTh.priority)
-          print("nextTh name is:")
-          print(nextTh.name)
           Run (nextTh)
-          print("am i stuck in sleep?")
         endMethod
 
       ----------  Thread . CheckOverflow  ----------
