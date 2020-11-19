@@ -108,6 +108,7 @@ code Main
       var i: int
           oldStatus: int
       for i = 1 to cnt
+        print("am i stuck here?")
         oldStatus = SetInterruptsTo (DISABLED)
         print (currentThread.name)
         print(" | ")
