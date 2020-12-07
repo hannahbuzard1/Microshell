@@ -1,5 +1,7 @@
 /*
  *  File: Simulation.c ... a skeleton file
+    Hannah buzard
+    CSCI 447 Fall 2020
  */
 
 #include <stdio.h>
@@ -7,245 +9,307 @@
 #include <string.h>
 #include <stdbool.h>
 
-void SecondChanceSplit(int line, int process);
-int countLines(FILE* filename);
-void Simulate(char* fileName1, char* fileName2, char allocation);
-int inSplitTable(int line, int process);
-int inFreeTable(int line, int process);
-void SecondChanceFreeAll(int line, int process);
-char trace1[100];
+char trace1[100]; //trace files
 char trace2[100];
-int* pagetable[64]; //currently testing 64 frames
 int numframes;
-int pointerpos;
-int ptrP1;
-int ptrP2;
-int numPageFaults;
-/* If there are custom classes/source files that you write, with
-   custom functions, and you want those functions available for use in
-   THIS .c file, then include the header file for the custom .c
-   file(s) you've written, using the #include directive. For example:
+char *framenum[128]; //array of page numbers for table
+char *file1lines[1000000]; //file1Lines and file2lines hold every line frome each file
+char *file2lines[1000000];
+int bitnum[128]; //reference bit array for table
+int processnum[128]; //array of process numbers for table
+int pointerpos; // pointer for second chance (Free)
+int file1ptr; //pointers for second change (Split)
+int file2ptr;
+int count1; //counts of file lines for each file
+int count2;
+int numpagefaults;
 
-   #include "SomeFile.h"
 
- */
-
-int countLines(FILE* filename) {
-  int count = 0;
-  char c;
-  for (c = getc(filename); c != EOF; c = getc(filename)) {
-       if (c == '\n') {
-           count = count + 1;
-       }
-  }
-  return count;
-}
-
-void Simulate(char* fileName1, char* fileName2, char allocation) {
-  // A function whose inputs are the trace files names and the allocation
-  // strategy 's' for split or 'f' for free for all
-    pointerpos = 0;
-    ptrP1 = 0;
-    ptrP2 = 0;
-   numframes = 64;
-   FILE* file1 = fopen(fileName1, "r");
-   FILE* file2 = fopen(fileName2, "r");
-   int count1 = countLines(file1);
-   int count2 = countLines(file2);
-   int file1lines[count1];
-   int file2lines[count2];
-   int counter = 0;
-   char string[100];
-   while (fgets(string, 100, file1)) {
-       char part[4];
-       memcpy(part, &string[0], 4);
-       part[4] = '\0';
-       file1lines[counter] = atoi(part);
+//This function performs Second Chance Replacement for Split allocation
+//Adds page to spot in table where reference bit is '0' and the process is equal to the page's process
+ void SecondChanceSplit (int process, int counter) {
+   char* fileLines = malloc(5);
+   int pointer;
+   if (process == 1) {
+     pointer = file1ptr;
+     strncpy(fileLines, file1lines[counter], 5);
+   } else {
+     pointer = file2ptr;
+     strncpy(fileLines, file2lines[counter], 5);
    }
-   counter = 0;
-   while (fgets(string, 100, file2)) {
-       char part[4];
-       memcpy(part, &string[0], 4);
-       part[4] = '\0';
-       file2lines[counter] = atoi(part);
+   bool found = false;
+   while(found != true) { // while a '0' reference bit has not been found, keep looking through table
+       if(bitnum[pointer] == 1) { //if a 1 is encountered, set it's reference bit to 0
+         bitnum[pointer] = 0;
+       } else { //found a '0', then add the page in that spot and update the reference bit and process num
+         found = true;
+         framenum[pointer] = malloc(5);
+         strncpy(framenum[pointer], fileLines, 5);
+         bitnum[pointer] = 0;
+         processnum[pointer] = process;
+       }
+       pointer = pointer + 1;
+       if(process == 1) {
+         if (pointer == numframes/2 - 1 ) {
+           pointer = 0;
+         }
+       } else {
+         if (pointer == numframes - 1) {
+           pointer = numframes/2;
+         }
+       }
+     }
+     if (process == 1) {
+       file1ptr = pointer;
+     } else {
+       file2ptr = pointer;
+     }
+ }
+
+//This function checks whether a given page is already in the page table or not (for Split allocation)
+ int inSplit(int process, int counter) {
+   bool found = false;
+   int location = -1;
+   char* fileLines = malloc(5);
+   if (process == 1) {
+     strncpy(fileLines, file1lines[counter], 5);
+   } else {
+     strncpy(fileLines, file2lines[counter], 5);
    }
-   if(allocation == 'f') {
-     int file1count = 0;
-     int file2count = 0;
-     bool process1 = true;
-     int totalcount = 0;
-     int process;
-     int line;
-     while (file1count < sizeof(file1lines)  && file2count < sizeof(file2lines)) {
-       if(process1 == true) {
-         process = 1;
-         line = file1lines[file1count];
-         file1count = file1count + 1;
-       } else {
-         process = 2;
-         line = file2lines[file2count];
-         file2count = file2count + 1;
+   for(int i = 0; i < numframes; i++) { //look for the same page number with the same process number in table
+     if(strcmp(framenum[i], fileLines) == 0 && processnum[i] == process) {
+       found = true;
+       location = i;
+       break;
+     }
+   }
+   if(found == false) {
+     return -1;
+   } else {
+    return location;
+   }
+ }
+//This function implements second chance replacement for free all allocation
+ void SecondChanceFree(int process, int counter) {
+   char* fileLines = malloc(5);
+   if (process == 1) {
+     strncpy(fileLines, file1lines[counter], 5);
+   } else {
+     strncpy(fileLines, file2lines[counter], 5);
+   }
+   bool found = false;
+   while(found != true) {
+       if(bitnum[pointerpos] == 1) { //if the reference bit is 1, reset it to '0'
+         bitnum[pointerpos] = 0;
+       } else { //if '0' found, add page to table at this spot and update reference bit and process number
+         found = true;
+         framenum[pointerpos] = malloc(5);
+         strncpy(framenum[pointerpos], fileLines, 5);
+         bitnum[pointerpos] = 0;
+         processnum[pointerpos] = process;
        }
-       int location = inSplitTable(line,process);
-       if(location != 0) {
-         int* currpage = pagetable[location];
-         currpage[0] = 1;
-         pagetable[location] = currpage;
-       } else {
-         SecondChanceSplit(line, process);
-         numPageFaults = numPageFaults + 1;
+       pointerpos = pointerpos + 1;
+       if(pointerpos == numframes - 1) {
+         pointerpos = 0;
        }
-       if(file2count == sizeof(file2lines)) {
+     }
+ }
+
+//This functions checks whether a given element is present in the page table or not (for free all allocation)
+ int inFreeTable(int process, int counter) {
+   char* fileLines = malloc(5);
+   if (process == 1) {
+     strncpy(fileLines, file1lines[counter], 5);
+   } else {
+     strncpy(fileLines, file2lines[counter], 5);
+   }
+   for(int i = 0; i < numframes; i++) { //look for location in table where the page in table equals the given page
+     if(strcmp(framenum[i], fileLines) == 0) {
+       return i;
+     }
+   }
+   return -1;
+ }
+
+//This function counts the number of lines in each file
+ int countLines(FILE* filename) {
+   int count = 0;
+   char c;
+   for (c = getc(filename); c != EOF; c = getc(filename)) {
+        if (c == '\n') {
+            count = count + 1;
+        }
+   }
+   return count;
+ }
+
+//This function is called when 'f' allocation is specified and performs Second chance replacement
+ void FreeAll() {
+   int file1count = 0;
+   int file2count = 0;
+   bool process1 = true;
+   int totalcount = 0;
+   int process;
+   int location = 0;
+   while (totalcount < count1 + count2) { //while every line from each file has not been read
+     if(process1 == true) { //check if page is in the table
+       process = 1;
+       location = inFreeTable(1, file1count);
+     } else {
+       process = 2;
+       location = inFreeTable(2, file2count);
+     }
+     if(location != -1) { //if the page was already in the table, give this page a second chance (set ref bit to 1)
+       bitnum[location] = 1;
+     } else { //otherwise call second chance replacement to add page to table
+       if (process == 1) {
+         SecondChanceFree(1, file1count);
+      } else {
+        SecondChanceFree(2, file2count);
+      }
+       numpagefaults = numpagefaults + 1; //increase page fault num if added page to table
+     }
+     if(file2count == count2) {
+       process1 = true;
+     }
+     if(file1count == count1) {
+       process1 = false;
+     }
+     if(totalcount%20 == 0) { //switch processes after 20 lines are processed from the same file
+       if (process1 == true) {
+         process1 = false;
+       } else {
          process1 = true;
        }
-       if(file1count == sizeof(file1lines)) {
-         process1 = false;
-       }
-       if(totalcount%20 == 0) {
-         if (process1 == true) {
-           process1 = false;
-         } else {
-           process1 = true;
-         }
-       }
-       totalcount = totalcount + 1;
      }
-   } else { //set up page table using split allocation strategy
-     int line;
-     int totalcount = 0;
-     bool currentfile1 = true;
-     bool replace;
-     int process;
-     int file1count = 0;
-     int file2count = 0;
-     int location;
-     while (file1count < sizeof(file1lines)  && file2count < sizeof(file2lines)) {
-         if(currentfile1 == true) {
-           process = 1;
-           line = file1lines[file1count];
-           location = inFreeTable(line, process);
-           if(location != 0) {
-               replace = false;
-           } else {
-             replace = true;
-           }
-           file1count = file1count + 1;
-           if(file1count == sizeof(file1lines)) {
-             currentfile1 = false;
-           }
-         } else {
-           process = 2;
-           line = file2lines[file2count];
-           location = inFreeTable(line, process);
-           if(location != 0) {
-               replace = false;
-           } else {
-             replace = true;
-           }
-           file2count = file2count + 1;
-           if(file2count == sizeof(file2lines)) { //revise this
-             currentfile1 = true;
-           }
-         }
-         if(totalcount%20 == 0) {
-           if (currentfile1 == true) {
-             currentfile1 = false;
-           } else {
-             currentfile1 = true;
-           }
-         }
-         if (replace == false ) {
-           int* currpage = pagetable[location];
-           currpage[1] = 1;
-           pagetable[location] = currpage;
-         } else {
-             SecondChanceFreeAll(line, process);
-         }
-       totalcount = totalcount + 1;
-       }
+     totalcount = totalcount + 1;
+     if (process == 1) {
+       file1count = file1count + 1;
+     } else {
+       file2count = file2count + 1;
+     }
    }
 }
 
-int inFreeTable(int line, int process) {
-  for(int i = 0; i < numframes; i++) {
-    int* currpage = pagetable[i];
-    if(currpage[0] == line) {
-      return i;
+//This function is called when 's' is given for Allocation
+//This function performs second chance replacement
+void Split() {
+  int file1count = 0;
+  int file2count = 0;
+  bool process1 = true;
+  int totalcount = 0;
+  int process;
+  int location = 0;
+  while (totalcount < count1 + count2) { //while all lines from each file have not been read
+    if(process1 == true) { //check whether current page is already in the page table
+      process = 1;
+      location = inSplit(1, file1count);
+    } else {
+      process = 2;
+      location = inSplit(2, file2count);
     }
-  }
-  return 0;
-}
-
-int inSplitTable(int line, int process) {
-  int start;
-  int end;
-  if(process == 1) {
-    start = 0;
-    end = numframes;
-  } else {
-    start = numframes/2;
-    end = numframes;
-  }
-  for(int i = start; i < end; i++) {
-    int* currpage = pagetable[i];
-    if(currpage[0] == line) {
-      return i;
-    }
-  }
-  return 0;
-}
-
-void SecondChanceFreeAll(int line, int process) {
-  bool found = false;
- while(found != true) {
-      int* currpage = pagetable[pointerpos];
-      if(currpage[1] == 1) {
-        currpage[1] = 0;
-      } else {
-        found = true;
-        int newline[3] = {line, 0, process};
-        pagetable[pointerpos] = newline;
-      }
-      pointerpos = pointerpos + 1;
-      if(pointerpos == numframes) {
-        pointerpos = 0;
-      }
-    }
-  }
-
-void SecondChanceSplit(int line, int process) {
-  int frameptr;
-  if (process == 1) {
-      frameptr = ptrP1;
-  } else {
-    frameptr = ptrP2;
-  }
-  bool found = false;
-   while(found != true) {
-        int* currpage = pagetable[frameptr];
-        if(currpage[1] == 1) {
-          currpage[1] = 0;
-        } else {
-          int newline[3] = {line, 0, process};
-          pagetable[frameptr] = newline;
-        }
-      }
+    if(location != -1) { //if page in table, update its reference bit to 1 to give it a second chance
+      bitnum[location] = 1;
+    } else { //otherwise, call second chance replacement to add page to table
       if (process == 1) {
-          ptrP1 = frameptr;
+        SecondChanceSplit(1, file1count);
+     } else {
+        SecondChanceSplit(2, file2count);
+      }
+      numpagefaults = numpagefaults + 1; //increase page faults whenever a page is added
+    }
+    if(file2count == count2) {
+      process1 = true;
+    }
+    if(file1count == count1) {
+      process1 = false;
+    }
+    if(totalcount%20 == 0) { //switch processes once 20 lines have been read from the same file
+      if (process1 == true) {
+        process1 = false;
       } else {
-        ptrP2 = frameptr;
+        process1 = true;
       }
     }
+    totalcount = totalcount + 1;
+    if (process == 1) {
+      file1count = file1count + 1;
+    } else {
+      file2count = file2count + 1;
+    }
+  }
+}
+// A function whose inputs are the trace files names and the allocation
+// strategy 's' for split or 'f' for free for all
+void Simulate(char* fileName1, char* fileName2, int allocation) {
+   file1ptr = 0;         //intialize pointers for split second change
+   file2ptr = numframes/2;
+   pointerpos = 0;
+   FILE* file1 = fopen(fileName1, "r");
+   FILE* file2 = fopen(fileName2, "r");
+   count1 = countLines(file1);
+   count2 = countLines(file2);
+   int counter = 0;
+   char string[100];
+   FILE* file1pt2 = fopen(fileName1, "r");
+   FILE* file2pt2 = fopen(fileName2, "r");
+   while (fgets(string, 100, file1pt2)) { //read lines from file1 into file1lines array
+       char* part = malloc(5);
+       memcpy(part, &string[0], 5);
+       file1lines[counter] = malloc(5);
+       strncpy(file1lines[counter], part,5); //copy first 5 characters from file line (to get page)
+       counter = counter + 1;
+   }
+   counter = 0;
+   while (fgets(string, 100, file2pt2)) { //read lines from file2 into file2lines array
+       char* part = malloc(5);
+       memcpy(part, &string[0], 5);
+       file2lines[counter] = malloc(5);
+       strncpy(file2lines[counter], part,5); //copy first 5 characters from file line (to get page)
+       counter = counter + 1;
+   }
+   char* src = malloc(5);
+   char otherstring[5] = "-1111";
+   memcpy(src, &otherstring[0], 5);
+   for(int i=0; i< 128; i++) {  //initialize table contents
+     bitnum[i] = 0;
+     processnum[i] = 0;
+     framenum[i] = malloc(5);
+     strncpy(framenum[i], src,5);
+   }
+     if(allocation == 1) {
+       FreeAll();
+     } else {
+       Split();
+    }
+    printf("Num page faults for %d frames : %d\n", numframes, numpagefaults);
+  }
 
 int main( int argc, char *argv[] )  {
-   if( argc != 3 ) {
+  int allocation;
+   if( argc < 4 ) {
       printf("Incorrect number of arguments provided.");
       return -1;
    }
-    strcpy(trace1,argv[1]);
-    strcpy(trace2 , argv[2]);
-    int flags = atoi(argv[3]);
-
-    Simulate(trace1, trace2, flags);
+   if(strcmp(argv[3], "f") == 0) {
+      allocation = 1;
+   } else {
+     allocation = 0;
+   }
+    printf("Allocation: %s\n", argv[3]);
+    strncpy(trace1, argv[1], 11);
+    trace1[11] = '\0';
+    strncpy(trace2, argv[2], 11);
+    trace1[11] = '\0';
+    numpagefaults = 0;
+    numframes = 32;
+    Simulate(trace1, trace2, allocation); //run code for 32 frame table
+    numpagefaults = 0;
+    numframes = 64;
+    Simulate(trace1, trace2, allocation); //run code for 64 frame table
+    numpagefaults = 0;
+    numframes = 128;
+    Simulate(trace1,trace2, allocation); // run code for 128 frame table
     return 0;
 }
+
