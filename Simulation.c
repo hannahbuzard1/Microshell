@@ -292,11 +292,12 @@ int main( int argc, char *argv[] )  {
       return -1;
    }
    if(strcmp(argv[3], "f") == 0) {
+      printf("Allocation: Free All\n");
       allocation = 1;
    } else {
+     printf("Allocation: Split\n");
      allocation = 0;
    }
-    printf("Allocation: %s\n", argv[3]);
     strncpy(trace1, argv[1], 11);
     trace1[11] = '\0';
     strncpy(trace2, argv[2], 11);

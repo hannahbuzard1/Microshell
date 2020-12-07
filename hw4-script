@@ -1,0 +1,15 @@
+Script started on 2020-12-06 22:48:20-0800
+buzardh@cf164-05:~/csci447_f20$ exit[2Plsmakenano Simulation.c./Simulation trace1.txt trace2.txt sf
+Allocation: Free All
+Num page faults for 32 frames : 243657
+Num page faults for 64 frames : 125279
+Num page faults for 128 frames : 76532
+buzardh@cf164-05:~/csci447_f20$ ./Simulation trace1.txt trace2.txt f[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cexit[K[2Plsmakenano Simulation.c./Simulation trace1.txt trace2.txt s
+Allocation: Split
+Num page faults for 32 frames : 285713
+Num page faults for 64 frames : 133969
+Num page faults for 128 frames : 80327
+buzardh@cf164-05:~/csci447_f20$ exit
+exit
+
+Script done on 2020-12-06 22:48:34-0800
