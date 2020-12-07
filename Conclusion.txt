@@ -1,0 +1,7 @@
+﻿Split Allocation        Free Allocation
+32 Frames:         285,713                243,657
+64 Frames:        133,969                125,279
+128 Frames:        80,327                        76,532
+
+
+Above is a table that shows how many page faults my program records for each number of frames and each type of allocation (Free All versus Split). I believe that there should be more page faults the fewer number of frames there are because there are less pages stored in memory at a time, meaning you will have to add more pages to the table. I also believe that Free All allocation should result in less page faults because in Split Allocation each process can only access half of the page table, whereas in Free All allocation, a page can be inserted anywhere in the entire table (allowing more frames to be searched to find the page). My ideas line up with what my code has outputted. For 32 frames, there are more page faults than with 64 frames and there are more page faults with 64 frames than 128 frames. Also, using Free All allocation always resulted in less page faults. The number of page faults for 128 frames does seem a bit low to me, however, I believe that these are correct given that the number of page faults grows for each number of frames and type of allocation according to how it should.
